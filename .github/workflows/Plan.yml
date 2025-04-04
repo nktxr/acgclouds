@@ -7,7 +7,7 @@ permissions: {}
 
 jobs:
   Plan:
-    name: Lint
+    name: Plan
     runs-on: ubuntu-latest
     permissions:
       contents: read
