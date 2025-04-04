@@ -1,3 +1,8 @@
+# Generic . files
+.DS_Store
+.vscode
+.ansible
+
 # Local .terraform directories
 **/.terraform/*
 
