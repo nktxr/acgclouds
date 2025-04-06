@@ -1,5 +1,21 @@
-resource "aws_ssm_parameter" "foo" {
-  name  = "foo"
-  type  = "String"
-  value = "bar2"
+resource "tls_private_key" "ec2_keypair_generate" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+resource "aws_secretsmanager_secret" "keypair_private" {
+  name        = "keypair_private"
+  description = "Private key for EC2 keypair"
+}
+resource "aws_secretsmanager_secret_version" "keypair_private" {
+  secret_id     = aws_secretsmanager_secret.keypair_private.id
+  secret_string = tls_private_key.ec2_keypair_generate.private_key_pem
+}
+resource "aws_secretsmanager_secret" "keypair_public" {
+  name        = "keypair_public"
+  description = "Public key for EC2 keypair"
+}
+resource "aws_secretsmanager_secret_version" "keypair_public" {
+  secret_id     = aws_secretsmanager_secret.keypair_public.id
+  secret_string = tls_private_key.ec2_keypair_generate.public_key_pem
 }
