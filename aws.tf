@@ -19,3 +19,8 @@ resource "aws_secretsmanager_secret_version" "keypair_public" {
   secret_id     = aws_secretsmanager_secret.keypair_public.id
   secret_string = tls_private_key.ec2_keypair_generate.public_key_pem
 }
+
+resource "aws_key_pair" "deployer" {
+  key_name   = "ec2_keypair"
+  public_key = tls_private_key.ec2_keypair_generate.public_key_pem
+}
