@@ -4,7 +4,7 @@ resource "tls_private_key" "ec2_keypair_generate" {
 }
 
 resource "aws_secretsmanager_secret" "keypair_private" {
-  name        = "keypair_private"
+  name        = "keypair_private2"
   description = "Private key for EC2 keypair"
 }
 resource "aws_secretsmanager_secret_version" "keypair_private" {
@@ -12,7 +12,7 @@ resource "aws_secretsmanager_secret_version" "keypair_private" {
   secret_string = tls_private_key.ec2_keypair_generate.private_key_pem
 }
 resource "aws_secretsmanager_secret" "keypair_public" {
-  name        = "keypair_public"
+  name        = "keypair_public2"
   description = "Public key for EC2 keypair"
 }
 resource "aws_secretsmanager_secret_version" "keypair_public" {
@@ -21,6 +21,6 @@ resource "aws_secretsmanager_secret_version" "keypair_public" {
 }
 
 resource "aws_key_pair" "deployer" {
-  key_name   = "ec2_keypair"
+  key_name   = "ec2_keypair2"
   public_key = tls_private_key.ec2_keypair_generate.public_key_pem
 }
