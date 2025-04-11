@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+"""Check LocalStack services and list resources."""
+
 import json
 import subprocess
 
@@ -10,7 +12,7 @@ def get_localstack_services_status():
             ["localstack", "status", "services", "--format", "json"],
             capture_output=True,
             text=True,
-            check=True
+            check=True,
         )
         return json.loads(result.stdout)
     except subprocess.CalledProcessError as e:
@@ -39,6 +41,9 @@ def list_resources(service):
         elif service == "secretsmanager":
             print("Listing SecretsManager secrets:")
             subprocess.run(["awslocal", "secretsmanager", "list-secrets"], check=True)
+        elif service == "kms":
+            print("Listing kms keys:")
+            subprocess.run(["awslocal", "kms", "list-keys"], check=True)
         elif service == "iam":
             print("No resource listing implemented for service: iam")
         elif service == "sts":
@@ -48,8 +53,8 @@ def list_resources(service):
     except subprocess.CalledProcessError as e:
         print(f"Error listing resources for {service}: {e}")
 
-
 def main():
+    """Main function to check LocalStack services and list resources."""
     services_status = get_localstack_services_status()
     if not services_status:
         print("No services found or failed to retrieve services.")
