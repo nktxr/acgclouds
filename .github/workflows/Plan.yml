@@ -83,6 +83,11 @@ jobs:
           awslocal secretsmanager list-secrets
           echo "Localstack resources checked"
 
+      - name: Run LocalStack Service Check
+        run: |
+          ls && pwd
+          python check_localstack_services.py
+
       - name: Generate diagnostic report
         if: failure()
         run: |
