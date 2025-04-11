@@ -79,7 +79,7 @@ jobs:
       - name: Check Localstack Resources
         id: check-localstack-resources
         run: |
-          localstack status services
+          localstack status services -f json
           awslocal secretsmanager list-secrets
           echo "Localstack resources checked"
 
