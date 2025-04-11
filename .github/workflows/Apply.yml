@@ -9,6 +9,36 @@ on: # yamllint disable-line rule:truthy
 permissions: {}
 
 jobs:
+  Set-up:
+    name: Setup
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+      # To report GitHub Actions status checks
+      statuses: write
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Configure AWS credentials
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      # Step 3: Create the S3 bucket
+      - name: Create S3 bucket for Terraform backend
+        run: |
+          aws s3api create-bucket \
+            --bucket localstack \
+            --region us-east-1 \
+            --create-bucket-configuration LocationConstraint=us-east-1 || echo "Bucket already exists"
+
   Plan:
     name: Plan
     runs-on: ubuntu-latest

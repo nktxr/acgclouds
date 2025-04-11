@@ -10,4 +10,4 @@ To start with, fork this repository to allow yourself to populate your own secre
 2. Copy the returned credentials into GitHub secrets manager under
    - Access Key ID as AWS_ACCESS_KEY_ID
    - Secret Access Key as AWS_SECRET_ACCESS_KEY
-3. TBC
+3. Create an s3 bucket via cli for state
