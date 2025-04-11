@@ -108,7 +108,6 @@ jobs:
 
       - name: Run LocalStack Service Check
         run: |
-          ls && pwd
           python check_localstack_services.py
 
       - name: Generate diagnostic report

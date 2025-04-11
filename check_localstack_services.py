@@ -33,7 +33,7 @@ def list_resources(service):
             subprocess.run(["awslocal", "sns", "list-topics"], check=True)
         elif service == "ec2":
             print("Listing EC2 instances:")
-            subprocess.run(["awslocal", "ec2", "describe-instances", "--query", "Reservations[].Instances[]"], check=True)
+            subprocess.run(["awslocal", "ec2", "describe-instances"], check=True)
         elif service == "secretsmanager":
             print("Listing SecretsManager secrets:")
             subprocess.run(["awslocal", "secretsmanager", "list-secrets"], check=True)
