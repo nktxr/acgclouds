@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-import subprocess
 import json
+import subprocess
+
 
 def get_localstack_services_status():
     """Get the status of LocalStack services."""
@@ -15,6 +16,7 @@ def get_localstack_services_status():
     except subprocess.CalledProcessError as e:
         print(f"Error running 'localstack status services': {e}")
         return {}
+
 
 def list_resources(service):
     """List resources for a given service using awslocal."""
@@ -46,6 +48,7 @@ def list_resources(service):
     except subprocess.CalledProcessError as e:
         print(f"Error listing resources for {service}: {e}")
 
+
 def main():
     services_status = get_localstack_services_status()
     if not services_status:
@@ -60,6 +63,7 @@ def main():
             print(f"Service '{service}' is available but not running. Skipping...")
         else:
             print(f"Service '{service}' is not running or available. Skipping...")
+
 
 if __name__ == "__main__":
     main()

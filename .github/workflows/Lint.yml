@@ -1,9 +1,9 @@
 name: Lint
 
 on: # yamllint disable-line rule:truthy
-  push: 
+  push:
     branches:
-      - 'lint/*'
+      - "lint/*"
   workflow_dispatch:
 
 permissions: {}
