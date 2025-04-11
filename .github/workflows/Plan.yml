@@ -33,7 +33,7 @@ jobs:
       - name: Create S3 bucket for Terraform backend
         run: |
           aws s3api create-bucket \
-            --bucket localstack \
+            --bucket localstack12345 \
             --region us-east-1 || echo "Bucket already exists"
 
   Plan:
