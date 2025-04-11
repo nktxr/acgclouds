@@ -49,12 +49,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
       - uses: hashicorp/setup-terraform@v3
+
       - name: Set up Python 3.12
         id: setup-python
         uses: actions/setup-python@v4
         with:
           python-version: 3.12
+
       - name: Start Localstack
         id: start-localstack
         run: |
@@ -72,12 +75,13 @@ jobs:
           tflocal init
           tflocal apply -auto-approve
           echo "Terraform applied"
+
       - name: Check Localstack Resources
         id: check-localstack-resources
         run: |
-          localstack status resources
+          localstack status services
+          awslocal secretsmanager list-secrets
           echo "Localstack resources checked"
-          awslocal s3 ls
 
       - name: Generate diagnostic report
         if: failure()
