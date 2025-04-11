@@ -6,7 +6,7 @@ def get_localstack_services_status():
     """Get the status of LocalStack services."""
     try:
         result = subprocess.run(
-            ["localstack", "status", "services"],
+            ["localstack", "status", "services", "--format", "json"],
             capture_output=True,
             text=True,
             check=True
