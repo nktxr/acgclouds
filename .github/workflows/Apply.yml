@@ -9,7 +9,7 @@ on: # yamllint disable-line rule:truthy
 permissions: {}
 
 jobs:
-  Set-up:
+  Setup:
     name: Setup
     runs-on: ubuntu-latest
     permissions:
@@ -47,6 +47,10 @@ jobs:
       packages: read
       # To report GitHub Actions status checks
       statuses: write
+    env: # Or as an environment variable
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    needs: Setup
 
     steps:
       - uses: actions/checkout@v4
