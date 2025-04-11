@@ -83,10 +83,3 @@ jobs:
         if: failure()
         run: |
           curl -s localstack:4566/_localstack/diagnose | gzip -cf > localstack-diagnose.gz
-
-      - name: Upload
-        if: failure()
-        uses: actions/upload-artifact@v3.1.2
-        with:
-          name: localstack-diagnose
-          path: localstack-diagnose.gz
