@@ -79,13 +79,11 @@ jobs:
       - name: Check Localstack Resources
         id: check-localstack-resources
         run: |
-          localstack status services -f json
-          awslocal secretsmanager list-secrets
+          localstack status services
           echo "Localstack resources checked"
 
       - name: Run LocalStack Service Check
         run: |
-          ls && pwd
           python check_localstack_services.py
 
       - name: Generate diagnostic report
