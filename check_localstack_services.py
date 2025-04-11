@@ -56,8 +56,10 @@ def main():
         if status == "running":
             print(f"Service '{service}' is running. Listing resources...")
             list_resources(service)
+        elif status == "available":
+            print(f"Service '{service}' is available but not running. Skipping...")
         else:
-            print(f"Service '{service}' is not running. Skipping...")
+            print(f"Service '{service}' is not running or available. Skipping...")
 
 if __name__ == "__main__":
     main()

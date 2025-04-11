@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
-    bucket = "statetestnt"
-    key    = "tfstate/terraform.tfstate"
+    bucket = "localstack"
+    key    = "tfstate/localstack.tfstate"
     region = "us-east-1"
   }
   required_providers {
