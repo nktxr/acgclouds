@@ -1,3 +1,14 @@
+resource "aws_kms_key" "secrets_manager_key" {
+  description             = "KMS key for encrypting Secrets Manager secrets"
+  deletion_window_in_days = 7
+  enable_key_rotation     = true
+}
+
+resource "aws_kms_alias" "secrets_manager_key_alias" {
+  name          = "alias/secretsmanager"
+  target_key_id = aws_kms_key.secrets_manager_key.key_id
+}
+
 resource "tls_private_key" "ec2_keypair_generate" {
   algorithm = "RSA"
   rsa_bits  = 4096
@@ -6,20 +17,18 @@ resource "tls_private_key" "ec2_keypair_generate" {
 resource "aws_secretsmanager_secret" "keypair_private" {
   name        = "keypair_private"
   description = "Private key for EC2 keypair"
-  kms_key_id  = data.aws_kms_key.aws_secretsmanager.key_id
+  kms_key_id  = aws_kms_key.secrets_manager_key.arn
 }
 
 resource "aws_secretsmanager_secret_version" "keypair_private" {
   secret_id     = aws_secretsmanager_secret.keypair_private.id
   secret_string = tls_private_key.ec2_keypair_generate.private_key_openssh
-
 }
 
 resource "aws_secretsmanager_secret" "keypair_public" {
   name        = "keypair_public"
   description = "Public key for EC2 keypair"
-  kms_key_id  = data.aws_kms_key.aws_secretsmanager.key_id
-
+  kms_key_id  = aws_kms_key.secrets_manager_key.arn
 }
 
 resource "aws_secretsmanager_secret_version" "keypair_public" {
