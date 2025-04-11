@@ -23,6 +23,10 @@ def list_resources(service):
             subprocess.run(["awslocal", "s3", "ls"], check=True)
         elif service == "dynamodb":
             subprocess.run(["awslocal", "dynamodb", "list-tables"], check=True)
+        elif service == "ec2":
+            subprocess.run(["awslocal", "ec2", "describe-instances"], check=True)
+        elif service == "secretsmanager":
+            subprocess.run(["awslocal", "secretsmanager", "list-secrets"], check=True)
         elif service == "sqs":
             subprocess.run(["awslocal", "sqs", "list-queues"], check=True)
         elif service == "sns":
