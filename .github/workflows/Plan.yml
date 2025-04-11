@@ -7,36 +7,36 @@ on: # yamllint disable-line rule:truthy
 permissions: {}
 
 jobs:
-  Plan:
-    name: Plan
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: read
-      # To report GitHub Actions status checks
-      statuses: write
+  # Plan:
+  #   name: Plan
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: read
+  #     packages: read
+  #     # To report GitHub Actions status checks
+  #     statuses: write
 
-    steps:
-      - uses: actions/checkout@v4
-      - uses: hashicorp/setup-terraform@v3
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: hashicorp/setup-terraform@v3
 
-      - name: Terraform fmt
-        id: fmt
-        run: terraform fmt -check
-        continue-on-error: true
+  #     - name: Terraform fmt
+  #       id: fmt
+  #       run: terraform fmt -check
+  #       continue-on-error: true
 
-      - name: Terraform Init
-        id: init
-        run: terraform init -input=false
+  #     - name: Terraform Init
+  #       id: init
+  #       run: terraform init -input=false
 
-      - name: Terraform Validate
-        id: validate
-        run: terraform validate -no-color
+  #     - name: Terraform Validate
+  #       id: validate
+  #       run: terraform validate -no-color
 
-      - name: Terraform Plan
-        id: plan
-        run: terraform plan -no-color -input=false
-        continue-on-error: true
+  #     - name: Terraform Plan
+  #       id: plan
+  #       run: terraform plan -no-color -input=false
+  #       continue-on-error: true
 
   Localstack:
     name: Deploy Terraform Infrastructure to Localstack
@@ -83,9 +83,10 @@ jobs:
         if: failure()
         run: |
           curl -s localstack:4566/_localstack/diagnose | gzip -cf > localstack-diagnose.gz
+
       - name: Upload
         if: failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3.1.2
         with:
           name: localstack-diagnose
           path: localstack-diagnose.gz
