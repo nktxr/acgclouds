@@ -2,6 +2,7 @@ resource "aws_kms_key" "secrets_manager_key" {
   description             = "KMS key for encrypting Secrets Manager secrets"
   deletion_window_in_days = 7
   enable_key_rotation     = true
+  #checkov:skip=CKV2_AWS_64:Ephemeral key for testing
 }
 
 resource "aws_kms_alias" "secrets_manager_key_alias" {
@@ -18,6 +19,7 @@ resource "aws_secretsmanager_secret" "keypair_private" {
   name        = "keypair_private"
   description = "Private key for EC2 keypair"
   kms_key_id  = aws_kms_key.secrets_manager_key.arn
+  #checkov:skip=CKV2_AWS_57:Testing secret only
 }
 
 resource "aws_secretsmanager_secret_version" "keypair_private" {
@@ -29,6 +31,7 @@ resource "aws_secretsmanager_secret" "keypair_public" {
   name        = "keypair_public"
   description = "Public key for EC2 keypair"
   kms_key_id  = aws_kms_key.secrets_manager_key.arn
+  #checkov:skip=CKV2_AWS_57:Testing secret only
 }
 
 resource "aws_secretsmanager_secret_version" "keypair_public" {

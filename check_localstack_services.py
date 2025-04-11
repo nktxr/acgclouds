@@ -53,6 +53,7 @@ def list_resources(service):
     except subprocess.CalledProcessError as e:
         print(f"Error listing resources for {service}: {e}")
 
+
 def main():
     """Main function to check LocalStack services and list resources."""
     services_status = get_localstack_services_status()
