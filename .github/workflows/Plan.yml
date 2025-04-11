@@ -1,7 +1,8 @@
 name: Plan
 
 on: # yamllint disable-line rule:truthy
-  push: null
+  push:
+  workflow_dispatch:
 
 permissions: {}
 
@@ -14,9 +15,6 @@ jobs:
       packages: read
       # To report GitHub Actions status checks
       statuses: write
-    env: # Or as an environment variable
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     steps:
       - uses: actions/checkout@v4
@@ -40,7 +38,54 @@ jobs:
         run: terraform plan -no-color -input=false
         continue-on-error: true
 
-      - name: Terraform Apply
-        id: apply
-        run: terraform apply -no-color -input=false -auto-approve
-        continue-on-error: true
+  Localstack:
+    name: Deploy Terraform Infrastructure to Localstack
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+      # To report GitHub Actions status checks
+      statuses: write
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - name: Set up Python 3.10
+        id: setup-python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10
+      - name: Start Localstack
+        id: start-localstack
+        run: |
+          pip install localstack awscli-local[ver1]
+          pip install terraform-local
+          docker pull localstack/localstack:latest
+          localstack start -d
+          echo "Waiting 30 seconds for Localstack to start"
+          localstack wait -t 15
+          echo "Localstack started"
+
+      - name: Deploy on Terraform
+        id: deploy
+        run: |
+          tflocal init
+          tflocal apply -auto-approve
+          echo "Terraform applied"
+      - name: Check Localstack Resources
+        id: check-localstack-resources
+        run: |
+          localstack status resources
+          echo "Localstack resources checked"
+          awslocal s3 ls
+
+      - name: Generate diagnostic report
+        if: failure()
+        run: |
+          curl -s localstack:4566/_localstack/diagnose | gzip -cf > localstack-diagnose.gz
+      - name: Upload
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: localstack-diagnose
+          path: localstack-diagnose.gz
