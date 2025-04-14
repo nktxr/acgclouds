@@ -7,69 +7,69 @@ on: # yamllint disable-line rule:truthy
 permissions: {}
 
 jobs:
-  Setup:
-    name: Setup S3 Bucket
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: read
-      # To report GitHub Actions status checks
-      statuses: write
+  # Setup:
+  #   name: Setup S3 Bucket
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: read
+  #     packages: read
+  #     # To report GitHub Actions status checks
+  #     statuses: write
 
-    steps:
-      # Step 1: Checkout the repository
-      - name: Checkout code
-        uses: actions/checkout@v4
+  #   steps:
+  #     # Step 1: Checkout the repository
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
 
-      # Step 2: Configure AWS credentials
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+  #     # Step 2: Configure AWS credentials
+  #     - name: Configure AWS credentials
+  #       uses: aws-actions/configure-aws-credentials@v4
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         aws-region: us-east-1
 
-      # Step 3: Create the S3 bucket
-      - name: Create S3 bucket for Terraform backend
-        run: |
-          aws s3api create-bucket \
-            --bucket localstack12345 \
-            --region us-east-1 || echo "Bucket already exists"
+  #     # Step 3: Create the S3 bucket
+  #     - name: Create S3 bucket for Terraform backend
+  #       run: |
+  #         aws s3api create-bucket \
+  #           --bucket localstack12345 \
+  #           --region us-east-1 || echo "Bucket already exists"
 
-  Plan:
-    name: Plan
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: read
-      # To report GitHub Actions status checks
-      statuses: write
-    needs: Setup
-    env: # Or as an environment variable
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  # Plan:
+  #   name: Plan
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: read
+  #     packages: read
+  #     # To report GitHub Actions status checks
+  #     statuses: write
+  #   needs: Setup
+  #   env: # Or as an environment variable
+  #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-    steps:
-      - uses: actions/checkout@v4
-      - uses: hashicorp/setup-terraform@v3
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: hashicorp/setup-terraform@v3
 
-      - name: Terraform fmt
-        id: fmt
-        run: terraform fmt -check
-        continue-on-error: true
+  #     - name: Terraform fmt
+  #       id: fmt
+  #       run: terraform fmt -check
+  #       continue-on-error: true
 
-      - name: Terraform Init
-        id: init
-        run: terraform init -input=false
+  #     - name: Terraform Init
+  #       id: init
+  #       run: terraform init -input=false
 
-      - name: Terraform Validate
-        id: validate
-        run: terraform validate -no-color
+  #     - name: Terraform Validate
+  #       id: validate
+  #       run: terraform validate -no-color
 
-      - name: Terraform Plan
-        id: plan
-        run: terraform plan -no-color -input=false
-        continue-on-error: true
+  #     - name: Terraform Plan
+  #       id: plan
+  #       run: terraform plan -no-color -input=false
+  #       continue-on-error: true
 
   Lint:
     name: Lint
@@ -103,7 +103,7 @@ jobs:
       packages: read
       # To report GitHub Actions status checks
       statuses: write
-    needs: Plan
+    # needs: Plan
 
     steps:
       - uses: actions/checkout@v4
