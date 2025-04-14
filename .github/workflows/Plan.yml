@@ -33,7 +33,7 @@ jobs:
       - name: Create S3 bucket for Terraform backend
         run: |
           aws s3api create-bucket \
-            --bucket localstack12345 \
+            --bucket localstack123459 \
             --region us-east-1 || echo "Bucket already exists"
 
   Plan:
@@ -103,7 +103,7 @@ jobs:
       packages: read
       # To report GitHub Actions status checks
       statuses: write
-    needs: Plan
+    # needs: Plan
 
     steps:
       - uses: actions/checkout@v4
