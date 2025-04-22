@@ -1,0 +1,151 @@
+name: Plan2
+
+on: # yamllint disable-line rule:truthy
+  push:
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  Setup:
+    name: Setup S3 Bucket
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+      # To report GitHub Actions status checks
+      statuses: write
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Configure AWS credentials
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      # Step 3: Create the S3 bucket
+      - name: Create S3 bucket for Terraform backend
+        run: |
+          aws s3api create-bucket \
+            --bucket localstack123459 \
+            --region us-east-1 || echo "Bucket already exists"
+
+  Plan:
+    name: Plan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+      # To report GitHub Actions status checks
+      statuses: write
+    needs: Setup
+    env: # Or as an environment variable
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform fmt
+        id: fmt
+        run: terraform fmt -check
+        continue-on-error: true
+
+      - name: Terraform Init
+        id: init
+        run: terraform init -input=false
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -no-color -input=false
+        continue-on-error: true
+
+  Lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+      # To report GitHub Actions status checks
+      statuses: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # super-linter needs the full git history to get the
+          # list of files that changed across commits
+          fetch-depth: 0
+
+      - name: Super-linter
+        uses: super-linter/super-linter@v7.2.1 # x-release-please-version
+        env:
+          # To report GitHub Actions status checks
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_JSCPD: false
+
+  Localstack:
+    name: Deploy Terraform Infrastructure to Localstack
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+      # To report GitHub Actions status checks
+      statuses: write
+    # needs: Plan
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+
+      - name: Set up Python 3.12
+        id: setup-python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+
+      - name: Start Localstack
+        id: start-localstack
+        run: |
+          pip install localstack awscli-local[ver1]
+          pip install terraform-local
+          docker pull localstack/localstack:latest
+          localstack start -d
+          echo "Waiting 30 seconds for Localstack to start"
+          localstack wait -t 15
+          echo "Localstack started"
+
+      - name: Deploy on Terraform
+        id: deploy
+        run: |
+          tflocal init
+          tflocal apply -auto-approve
+          echo "Terraform applied"
+
+      - name: Check Localstack Resources
+        id: check-localstack-resources
+        run: |
+          localstack status services
+          awslocal secretsmanager list-secrets
+          echo "Localstack resources checked"
+
+      - name: Run LocalStack Service Check
+        run: |
+          python check_localstack_services.py
+
+      - name: Generate diagnostic report
+        if: failure()
+        run: |
+          curl -s localstack:4566/_localstack/diagnose | gzip -cf > localstack-diagnose.gz
