@@ -3,6 +3,7 @@
 ## Init
 
 To start with, fork this repository to allow yourself to populate your own secrets for your own cloud environments.
+This will aid with IT testing for TF.
 
 ## AWS Steps
 
