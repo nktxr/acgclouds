@@ -6,7 +6,7 @@ TF_ARTIFACT := /opt/app/terraform.plan
 
 
 .PHONY: lint
-lint: 
+lint:  _clean
 	$(TF) fmt -check -recursive /opt/app/
 
 .PHONY: build
@@ -20,3 +20,10 @@ _init:   ## Initialise terraform state file with S3 - no lock
 	$(TF) init -backend-config=key=tfstate/localstack.tfstate \
 		-backend-config=bucket=njttestbucket021093 \
 		-reconfigure >&2 ;\
+
+.PHONY: _clean
+_clean: ## Remove terraform directory and any left over docker networks
+	>&2 echo "Removing .terraform directory and purging orphaned docker networks"
+	$(DOCKER_COMPOSE) --entrypoint="rm -rf .terraform/modules" terraform
+	docker compose down --remove-orphans 2>/dev/null ;\
+	echo "Cleanup completed."
