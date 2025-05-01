@@ -9,9 +9,13 @@ permissions:
   contents: write
   security-events: write
 
+env: # Or as an environment variable
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }} 
+
 jobs:
-  Test:
-    name: test
+  Configure:
+    name: configure
     runs-on: cd
     permissions:
       contents: write
@@ -23,5 +27,43 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: GHA Env
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Create S3 bucket for Terraform backend
+        run: |
+          aws s3api create-bucket \
+            --bucket njttestbucket021093 \
+            --region us-east-1 \
+            --create-bucket-configuration LocationConstraint=us-east-1 || echo "Bucket already exists"
+            
+  Terraform:
+    name: Terraform
+    runs-on: cd
+    needs: Configure
+    permissions:
+      contents: write
+      packages: write
+      statuses: write
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: TF Lint
         run: make lint
+
+      - name: TF Plan
+        run: make build
