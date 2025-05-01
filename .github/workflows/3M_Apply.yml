@@ -1,0 +1,33 @@
+name: 3M_Apply
+
+on: # yamllint disable-line rule:truthy
+  push:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: write
+  security-events: write
+
+env:
+  bucket_name: $BUCKETNAME
+
+jobs:
+  Test:
+    name: test
+    runs-on: cd
+    permissions:
+      contents: write
+      packages: write
+      statuses: write
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: GHA Env
+        run: echo ${{ env.bucket_name}}
+
+      - name: Shell Env
+        run: echo $BUCKETNAME
