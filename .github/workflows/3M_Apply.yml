@@ -10,7 +10,7 @@ permissions:
   security-events: write
 
 env:
-  bucket_name: $BUCKETNAME
+  bucket_name: ${{ env.BUCKETNAME }}
 
 jobs:
   Test:
@@ -30,4 +30,4 @@ jobs:
         run: echo ${{ env.bucket_name}}
 
       - name: Shell Env
-        run: echo $BUCKETNAME
+        run: echo "$BUCKETNAME"
