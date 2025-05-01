@@ -1,6 +1,6 @@
 name: 3M_Apply
 
-on: # yamllint disable-line rule:truthy
+on:
   push:
   workflow_dispatch:
 
@@ -24,10 +24,4 @@ jobs:
         uses: actions/checkout@v4
 
       - name: GHA Env
-        run: echo ${{ env.BUCKETNAME}}
-
-      - name: Shell Env
-        run: echo "$BUCKETNAME"
-
-      - name: Test example Env
-        run: echo "$RUNNER_OS"
+        run: make lint
