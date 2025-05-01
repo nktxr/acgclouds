@@ -38,9 +38,8 @@ jobs:
         run: |
           aws s3api create-bucket \
             --bucket njttestbucket021093 \
-            --region us-east-1 \
-            --create-bucket-configuration LocationConstraint=us-east-1 || echo "Bucket already exists"
-            
+            --region us-east-1 || echo "Bucket already exists"
+
   Terraform:
     name: Terraform
     runs-on: cd
