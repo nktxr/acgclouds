@@ -16,9 +16,9 @@ build: _init ## Generate a terraform plan as an output file
 	|| ( (($$? == 2)) && $(TF) show $(TF_ARTIFACT) > tf_plan_changes || exit 1 )
 
 .PHONY: _init
-_init:   ## Initialise terraform state file with S3 - no lock
+_init:   ## Initialise terraform state
 	echo "Initialising Terraform backend" ;\
-	$(TF) init terraform init -input=false
+	$(TF) init -input=false
 
 .PHONY: _clean
 _clean: ## Remove terraform directory and any left over docker networks
