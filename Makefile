@@ -22,7 +22,7 @@ _init:   ## Initialise terraform state file with S3 - no lock
 
 .PHONY: _clean
 _clean: ## Remove terraform directory and any left over docker networks
-    >&2 echo "Removing .terraform directory and purging orphaned docker networks"
-    $(DOCKER_COMPOSE) --entrypoint="rm -rf .terraform/modules" terraform || true ;\
-    docker compose down --remove-orphans || true ;\
-    echo "Cleanup completed."
+	>&2 echo "Removing .terraform directory and purging orphaned docker networks"
+	$(DOCKER_COMPOSE) --entrypoint="rm -rf .terraform/modules" terraform || true ;\
+	docker compose down --remove-orphans || true ;\
+	echo "Cleanup completed."
