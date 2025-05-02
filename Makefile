@@ -16,10 +16,8 @@ build: _init ## Generate a terraform plan as an output file
 
 .PHONY: _init
 _init:   ## Initialise terraform state file with S3 - no lock
-	echo "Initialising Terraform backend with config key=tfstate/localstack.tfstate" ;\
-	$(TF) init -backend-config=key=tfstate/localstack.tfstate \
-		-backend-config=bucket=njttestbucket021093 \
-		-reconfigure >&2 ;\
+	echo "Initialising Terraform backend with config key=acgclouds.tfstate" ;\
+	$(TF) init terraform init -input=false
 
 .PHONY: _clean
 _clean: ## Remove terraform directory and any left over docker networks
