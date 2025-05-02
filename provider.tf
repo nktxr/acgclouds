@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket = "njttestbucket021093"
-    key    = "acgclouds.tfstate"
+    key    = "terraform.tfstate"
     region = "us-east-1"
   }
 
