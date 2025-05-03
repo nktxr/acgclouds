@@ -1,9 +1,10 @@
 terraform {
   backend "s3" {
-    bucket = "localstack123459"
-    key    = "tfstate/localstack.tfstate"
+    bucket = ""
+    key    = "terraform.tfstate"
     region = "us-east-1"
   }
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"

@@ -1,0 +1,80 @@
+name: 3M_Plan
+defaults:
+  run:
+    shell: bash
+on:
+  push:
+  workflow_dispatch:
+permissions:
+  id-token: write
+  contents: write
+  security-events: write
+env: # Or as an environment variable
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  BUCKET_NAME: ${{ vars.BUCKET_NAME }}
+jobs:
+  Configure:
+    name: configure
+    runs-on: CD
+    permissions:
+      contents: write
+      packages: write
+      statuses: write
+    env: # Or as an environment variable
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+         
+      - name: Create S3 bucket for Terraform backend
+        run: |
+          aws s3api create-bucket \
+            --bucket ${{ vars.BUCKET_NAME }} \
+            --region us-east-1 || echo "Bucket already exists"
+
+  Terraform:
+    name: Terraform
+    runs-on: CD
+    needs: Configure
+    permissions:
+      contents: write
+      packages: write
+      statuses: write
+    environment: Test_Env
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: AWS Creds
+        run: |
+          ./scripts/aws_credentials.sh
+
+      - name: TF Lint
+        run: make lint
+
+      - name: Debug AWS S3 Access
+        run: |
+          aws s3 ls s3://${{ vars.BUCKET_NAME }} --region us-east-1
+
+      - name: TF Plan
+        run: make build
