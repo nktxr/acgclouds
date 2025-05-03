@@ -11,12 +11,14 @@ permissions:
 
 env: # Or as an environment variable
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }} 
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  BUCKET_NAME: ${{ vars.BUCKET_NAME }}
 
 jobs:
   Configure:
     name: configure
-    runs-on: cd
+    runs-on: CD
+    environment: Test_Env
     permissions:
       contents: write
       packages: write
@@ -34,20 +36,31 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      - name: Checks Vars
+        run: |
+          echo "repository variable : $BUCKET_NAME"
+          
       - name: Create S3 bucket for Terraform backend
         run: |
           aws s3api create-bucket \
-            --bucket njttestbucket021093 \
+            --bucket $BUCKET_NAME \
             --region us-east-1 || echo "Bucket already exists"
+
+      - name: Checks creds
+        run: |
+          ls -lart
+          pwd
+          ls -lart ~
 
   Terraform:
     name: Terraform
-    runs-on: cd
+    runs-on: CD
     needs: Configure
     permissions:
       contents: write
       packages: write
       statuses: write
+    environment: Test_Env
 
     steps:
       # Step 1: Checkout the repository
