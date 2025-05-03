@@ -19,7 +19,7 @@ build: _init ## Generate a terraform plan as an output file
 _init:   ## Initialise terraform state
 	mkdir .aws || echo "already exists"
 	echo "Initialising Terraform backend" ;\
-	$(TF) init -input=false
+	$(TF) init -input=false -backend-config="bucket=$(BUCKET_NAME)";\
 
 .PHONY: _clean
 _clean: ## Remove terraform directory and any left over docker networks
