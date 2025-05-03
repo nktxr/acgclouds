@@ -67,7 +67,7 @@ jobs:
 
       - name: AWS Creds
         run: |
-          ./scripts/aws_credentials.sh
+          ./scripts/aws_creds.sh
 
       - name: TF Lint
         run: make lint
