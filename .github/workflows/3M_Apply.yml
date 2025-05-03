@@ -82,7 +82,11 @@ jobs:
 
       - name: Debug AWS S3 Access
         run: |
-          aws s3 ls s3://njttestbucket021093 --region us-east-1
+          aws s3 ls s3://${{ vars.BUCKET_NAME }} --region us-east-1
+
+      - name: Check envs
+        run: |
+          env
 
       - name: TF Plan
         run: make build
