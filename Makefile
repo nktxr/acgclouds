@@ -17,7 +17,6 @@ build: _init ## Generate a terraform plan as an output file
 
 .PHONY: _init
 _init:   ## Initialise terraform state
-	mkdir .aws || echo "already exists"
 	echo "Initialising Terraform backend" ;\
 	$(TF) init -input=false -backend-config="bucket=$(BUCKET_NAME)";\
 
