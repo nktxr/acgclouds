@@ -53,10 +53,10 @@ jobs:
           ls -lart
           pwd
           ls -lart ~
-          cat .env
           export AWS_SECRET_ACCESS_KEY
           export AWS_ACCESS_KEY_ID
-
+          cat .env
+          
   Terraform:
     name: Terraform
     runs-on: cd
