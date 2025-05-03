@@ -17,6 +17,8 @@ build: _init ## Generate a terraform plan as an output file
 
 .PHONY: _init
 _init:   ## Initialise terraform state
+	echo env > .env  
+	cat .env 
 	echo "Initialising Terraform backend" ;\
 	$(TF) init -input=false
 
