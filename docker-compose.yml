@@ -5,7 +5,7 @@ services:
     env_file: .env
     working_dir: /opt/app/
     volumes:
-      # - ~/.aws:/.aws
+      - ./.aws:/.aws
       - .:/opt/app:rw
       - ./passwd:/etc/passwd:rw
       - ~/.terraform.d/plugins:/opt/app/.terraform.d/plugins
