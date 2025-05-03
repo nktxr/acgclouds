@@ -1,4 +1,4 @@
-name: 3M_Apply
+name: 3M_Plan
 defaults:
   run:
     shell: bash
