@@ -72,6 +72,7 @@ resource "aws_instance" "example_ec2" {
   vpc_security_group_ids = [aws_security_group.allow_ssh.id]
 
   tags = {
-    Name = "Example EC2 Instance"
+    Name     = "Example EC2 Instance"
+    Deployed = "By Terraform"
   }
 }
