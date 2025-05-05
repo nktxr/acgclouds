@@ -33,12 +33,6 @@ jobs:
             --bucket ${{ vars.BUCKET_NAME }} \
             --region us-east-1 || echo "Bucket already exists"
 
-  Terraform_Plan:
-    name: Terraform Plan
-    runs-on: ubuntu-latest
-    needs: Configure
-
-    steps:
       - name: TF Lint
         run: make lint
 
@@ -48,9 +42,11 @@ jobs:
   Terraform_Apply:
     name: Terraform Apply
     runs-on: ubuntu-latest
-    needs: Terraform_Plan
+    needs: Configure
     environment: Test_Env
 
     steps:
+      - name: ls
+        run: ls -lart && ls -lart ~    
       - name: TF Apply
         run: make apply
