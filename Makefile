@@ -12,8 +12,8 @@ lint:  _clean
 
 .PHONY: build
 build: _init ## Generate a terraform plan as an output file
-	$(TF) plan -input=false -detailed-exitcode -out $(TF_ARTIFACT) || exit 1
-	@echo "Terraform plan generated"
+	$(TF) plan -input=false -detailed-exitcode -out $(TF_ARTIFACT) \
+	|| ( (($$? == 2)) && $(TF) show $(TF_ARTIFACT) > tf_plan_changes || exit 1 )
 
 .PHONY: apply
 apply: ## Apply terraform changes
