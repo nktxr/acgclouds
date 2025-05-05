@@ -1,4 +1,4 @@
-name: 3M_Plan
+name: 3M_Self_Hosted_Runner
 defaults:
   run:
     shell: bash
