@@ -40,7 +40,7 @@ resource "aws_secretsmanager_secret_version" "keypair_public" {
 }
 
 resource "aws_key_pair" "ec2_keypair" {
-  key_name   = "ec2_keypair"
+  key_name   = "ec2_example_keypair"
   public_key = tls_private_key.ec2_keypair_generate.public_key_openssh
 }
 
