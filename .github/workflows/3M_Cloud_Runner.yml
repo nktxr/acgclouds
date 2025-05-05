@@ -1,0 +1,56 @@
+name: 3M_Plan
+defaults:
+  run:
+    shell: bash
+on:
+  push:
+  workflow_dispatch:
+permissions:
+  id-token: write
+  contents: write
+  security-events: write
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  BUCKET_NAME: ${{ vars.BUCKET_NAME }}
+
+jobs:
+  Configure:
+    name: configure
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: AWS Creds
+        run: |
+          ./scripts/aws_credentials.sh
+
+      - name: Create S3 bucket for Terraform backend
+        run: |
+          aws s3api create-bucket \
+            --bucket ${{ vars.BUCKET_NAME }} \
+            --region us-east-1 || echo "Bucket already exists"
+
+  Terraform_Plan:
+    name: Terraform Plan
+    runs-on: ubuntu-latest
+    needs: Configure
+
+    steps:
+      - name: TF Lint
+        run: make lint
+
+      - name: TF Plan
+        run: make build
+
+  Terraform_Apply:
+    name: Terraform Apply
+    runs-on: ubuntu-latest
+    needs: Terraform_Plan
+    environment: Test_Env
+
+    steps:
+      - name: TF Apply
+        run: make apply

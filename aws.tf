@@ -63,9 +63,9 @@ resource "aws_security_group" "allow_ssh" {
   }
 }
 
-resource "aws_instance" "example" {
+resource "aws_instance" "example_ec2" {
   ami           = "ami-084568db4383264d4"
-  instance_type = "t2.medium"
+  instance_type = "t3.medium"
 
   key_name = aws_key_pair.ec2_keypair.key_name
 
