@@ -47,6 +47,6 @@ jobs:
 
     steps:
       - name: ls
-        run: ls -lart && ls -lart ~    
+        run: ls -lart && ls -lart ~
       - name: TF Apply
         run: make apply
