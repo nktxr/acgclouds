@@ -15,6 +15,10 @@ build: _init ## Generate a terraform plan as an output file
 	$(TF) plan -input=false -detailed-exitcode -out $(TF_ARTIFACT) \
 	|| ( (($$? == 2)) && $(TF) show $(TF_ARTIFACT) > tf_plan_changes || exit 1 )
 
+.PHONY: apply
+apply: ## Apply terraform changes
+	$(TF) apply -input=false -auto-approve $(TF_ARTIFACT) || exit 1
+
 .PHONY: _init
 _init:   ## Initialise terraform state
 	echo "Initialising Terraform backend" ;\
