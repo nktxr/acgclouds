@@ -44,11 +44,32 @@ resource "aws_key_pair" "ec2_keypair" {
   public_key = tls_private_key.ec2_keypair_generate.public_key_openssh
 }
 
+resource "aws_security_group" "allow_ssh" {
+  name        = "allow_ssh"
+  description = "Allow SSH inbound traffic"
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 resource "aws_instance" "example" {
   ami           = "ami-084568db4383264d4"
   instance_type = "t2.medium"
 
   key_name = aws_key_pair.ec2_keypair.key_name
+
+  vpc_security_group_ids = [aws_security_group.allow_ssh.id]
 
   tags = {
     Name = "Example EC2 Instance"
