@@ -39,7 +39,18 @@ resource "aws_secretsmanager_secret_version" "keypair_public" {
   secret_string = tls_private_key.ec2_keypair_generate.public_key_openssh
 }
 
-resource "aws_key_pair" "deployer" {
+resource "aws_key_pair" "ec2_keypair" {
   key_name   = "ec2_keypair"
   public_key = tls_private_key.ec2_keypair_generate.public_key_openssh
+}
+
+resource "aws_instance" "example" {
+  ami           = "ami-0f88e80871fd81e91"
+  instance_type = "t2.micro"
+
+  key_name = aws_key_pair.ec2_keypair.key_name
+
+  tags = {
+    Name = "Example EC2 Instance"
+  }
 }
