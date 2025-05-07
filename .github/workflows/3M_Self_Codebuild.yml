@@ -40,6 +40,13 @@ jobs:
     needs: Configure
 
     steps:
+      - name: ls -lart
+        run: |
+          ./scripts/aws_credentials.sh
+      - name: AWS Creds
+        run: |
+          ./scripts/aws_credentials.sh
+
       - name: TF Lint
         run: make lint
 
@@ -54,5 +61,8 @@ jobs:
     environment: Test_Env
 
     steps:
+      - name: AWS Creds
+        run: |
+          ./scripts/aws_credentials.sh
       - name: TF Apply
         run: make apply
