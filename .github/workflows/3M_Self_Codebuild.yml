@@ -19,9 +19,9 @@ jobs:
     name: configure
     runs-on: 
       - codebuild-testcideb-${{ github.run_id }}-${{ github.run_attempt }}
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: AWS Creds
         run: |
@@ -40,8 +40,7 @@ jobs:
     needs: Configure
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: AWS Creds
         run: |
@@ -70,11 +69,15 @@ jobs:
     environment: Test_Env
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+
+      - name: TF Plan
+        run: ls -lart
 
       - name: AWS Creds
         run: |
           ./scripts/aws_credentials.sh
+
       - name: TF Apply
         run: make apply
