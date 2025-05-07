@@ -40,9 +40,9 @@ jobs:
     needs: Configure
 
     steps:
-      - name: ls -lart
-        run: |
-          ls -lart
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: AWS Creds
         run: |
           ./scripts/aws_credentials.sh
@@ -61,6 +61,9 @@ jobs:
     environment: Test_Env
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
       - name: AWS Creds
         run: |
           ./scripts/aws_credentials.sh
