@@ -53,6 +53,15 @@ jobs:
       - name: TF Plan
         run: make build
 
+      - name: TF Plan
+        run: ls -lart
+
+      - name: Upload File
+        uses: actions/upload-artifact@v2
+        with:
+          name: terraform.plan
+          path: terraform.plan
+
   Terraform_Apply:
     name: Terraform Apply
     runs-on: 
@@ -63,7 +72,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: AWS Creds
         run: |
           ./scripts/aws_credentials.sh
