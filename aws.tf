@@ -73,6 +73,6 @@ resource "aws_instance" "example_ec2" {
 
   tags = {
     Name     = "Example EC2 Instance"
-    Deployed = "By Terraform"
+    Deployed = "By Nick"
   }
 }
