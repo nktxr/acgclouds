@@ -76,9 +76,9 @@ jobs:
       - name: TF Plan
         run: ls -lart
 
-      - name: AWS Creds
-        run: |
-          ./scripts/aws_credentials.sh
+      # - name: AWS Creds
+      #   run: |
+      #     ./scripts/aws_credentials.sh
 
       - name: TF Apply
         run: make apply
