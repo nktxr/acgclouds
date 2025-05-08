@@ -1,0 +1,28 @@
+name: Parent Workflow
+
+on:
+  push:
+  workflow_dispatch:
+
+env:
+  MODULE_NAME: "My Module"
+
+jobs:
+  echo-init:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Initialize echo
+        run: echo "${{ env.MODULE_NAME }}"
+
+  call-child:
+    uses: ./.github/workflows/child.yml
+    with:
+      input_value: "Hello from parent"
+
+  echo-result:
+    runs-on: ubuntu-latest
+    needs: call-child
+    steps:
+      - name: Echo value returned from child
+        run: |
+            echo "Child returned: ${{ needs.call-child.outputs.child_output }}"

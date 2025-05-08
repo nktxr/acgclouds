@@ -1,0 +1,23 @@
+name: Child Workflow
+
+on:
+  workflow_call:
+    inputs:
+      input_value:
+        required: true
+        type: string
+    outputs:
+      child_output:
+        description: "Value returned from child"
+        value: ${{ jobs.child-job.outputs.child_output }}
+
+jobs:
+  child-job:
+    runs-on: ubuntu-latest
+    outputs:
+      child_output: ${{ steps.set-output.outputs.value }}
+    steps:
+      - name: Set output value
+        id: set-output
+        run: |
+            echo "value=Child received: ${{ inputs.input_value }}" >> $GITHUB_OUTPUT
