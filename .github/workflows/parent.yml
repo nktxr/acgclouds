@@ -12,12 +12,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize echo
-        run: echo "${{ env.MODULE_NAME }}"
+        run: echo time to run"
 
   call-child:
+    needs: echo-init
     uses: ./.github/workflows/child.yml
     with:
-      input_value: "Hello from parent"
+      input_value: ${{ env.MODULE_NAME }}
 
   echo-result:
     runs-on: ubuntu-latest
