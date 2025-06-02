@@ -1,0 +1,14 @@
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::211125380337:role/gha_test_role
+          role-session-name: GitHubActions
+          aws-region: us-east-1
