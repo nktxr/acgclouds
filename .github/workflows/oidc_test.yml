@@ -1,3 +1,9 @@
+name: OIDC test
+
+on: # yamllint disable-line rule:truthy
+  push:
+  workflow_dispatch:
+
 permissions:
   id-token: write
   contents: read
