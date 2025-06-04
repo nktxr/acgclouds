@@ -10,3 +10,10 @@ services:
       - ./passwd:/etc/passwd:rw
       - ~/.terraform.d/plugins:/opt/app/.terraform.d/plugins
       - ~/.ssh:/opt/app/.ssh:rw
+
+  aws:
+    image: amazon/aws-cli:latest
+    working_dir: /opt/app/
+    volumes:
+      - ./.aws:/root/.aws
+      - .:/opt/app:rw
