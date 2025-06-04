@@ -43,12 +43,15 @@ jobs:
         env: 
           AWS_ACCESS_KEY_ID: ${{ steps.creds.outputs.aws-access-key-id }}
           AWS_SECRET_ACCESS_KEY: ${{ steps.creds.outputs.aws-secret-access-key }}
+          AWS_SESSION_TOKEN: ${{ steps.creds.outputs.aws-session-token }}
 
       - name: AWS Creds check
         run: |
           ls -lart
           cat .aws/credentials
           
+      - name: List all S3 buckets
+        run: aws s3 ls
 
       # - name: Configure AWS Credentials 2
       #   uses: aws-actions/configure-aws-credentials@v4
