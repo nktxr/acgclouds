@@ -15,7 +15,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
-          role-to-assume: arn:aws:iam::381492075792:role/gha_test_role
+          role-to-assume: arn:aws:iam::381492075792:role/cfst-1449-adc7dde0b983ce9570f28df7f360c2-LambdaRole-dYY2LrEhl1oq
           role-session-name: GitHubActions
           aws-region: us-east-1
 
