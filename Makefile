@@ -8,12 +8,7 @@ TF_ARTIFACT := /opt/app/terraform.plan
 
 .PHONY: test
 test:  
-	ls -lart
-	cat .aws/credentials
-	$(AWS_DOCKER) --version
 	$(AWS_DOCKER) s3 ls
-	$(AWS_DOCKER) ls -lart
-	$(AWS_DOCKER) pwd
 
 .PHONY: lint
 lint:  _clean

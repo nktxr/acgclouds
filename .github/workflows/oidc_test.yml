@@ -45,8 +45,8 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ steps.creds.outputs.aws-secret-access-key }}
           AWS_SESSION_TOKEN: ${{ steps.creds.outputs.aws-session-token }}
           
-      - name: List all S3 buckets
-        run: aws s3 ls
+      # - name: List all S3 buckets
+      #   run: aws s3 ls
 
       - name: 3m s3 test
         run: make test
