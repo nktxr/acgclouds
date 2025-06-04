@@ -37,17 +37,18 @@ jobs:
         run: |
           aws sts get-caller-identity
       
-      - name: Check vars
-        run : env
-
       - name: AWS Creds
         run: |
-          pwd
-          ls
           ./scripts/aws_credentials.sh 
         env: 
           AWS_ACCESS_KEY_ID: ${{ steps.creds.outputs.aws-access-key-id }}
           AWS_SECRET_ACCESS_KEY: ${{ steps.creds.outputs.aws-secret-access-key }}
+
+      - name: AWS Creds check
+        run: |
+          ls -lart
+          cat .aws/credentials
+          
 
       # - name: Configure AWS Credentials 2
       #   uses: aws-actions/configure-aws-credentials@v4
