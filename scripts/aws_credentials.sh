@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Create the .aws directory - won't fair if it already exists
+# Create the .aws directory - won't fail if it already exists
 mkdir -p .aws
 
 # Create the AWS credentials file with default profile from GHA secrets

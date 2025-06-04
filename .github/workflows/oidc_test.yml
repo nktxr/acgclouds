@@ -12,12 +12,44 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v3
-        with:
-          role-to-assume: arn:aws:iam::381492075792:role/cfst-1449-adc7dde0b983ce9570f28df7f360c2-LambdaRole-dYY2LrEhl1oq
-          role-session-name: GitHubActions
-          aws-region: us-east-1
+      # - name: Configure AWS credentials
+      #   uses: aws-actions/configure-aws-credentials@v3
+      #   with:
+      #     role-to-assume: arn:aws:iam::905418016289:role/cfst-1449-314040f74818fc5af46c82a91bc9f0-LambdaRole-39s5vE2uQAnZ
+      #     role-session-name: GitHubActions
+      #     aws-region: us-east-1
+      #     output-credentials: true
 
-      - name: List all S3 buckets
-        run: aws s3 ls
+      # - name: List all S3 buckets
+      #   run: aws s3 ls
+
+      - name: Configure AWS Credentials 1
+        id: creds
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::905418016289:role/cfst-1449-314040f74818fc5af46c82a91bc9f0-LambdaRole-39s5vE2uQAnZ
+          output-credentials: true
+
+      - name: get caller identity 1
+        run: |
+          aws sts get-caller-identity
+      
+      - name: Check vars
+        run : env
+
+      - name: AWS Creds
+        run: |
+          ./scripts/aws_credentials.sh 
+        env: 
+          AWS_ACCESS_KEY_ID: ${{ steps.creds.outputs.aws-access-key-id }}
+          AWS_SECRET_ACCESS_KEY: ${{ steps.creds.outputs.aws-secret-access-key }}
+
+      - name: Configure AWS Credentials 2
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          aws-access-key-id: ${{ steps.creds.outputs.aws-access-key-id }}
+          aws-secret-access-key: ${{ steps.creds.outputs.aws-secret-access-key }}
+          aws-session-token: ${{ steps.creds.outputs.aws-session-token }}
+          role-to-assume: arn:aws:iam::123456789100:role/my-other-github-actions-role
