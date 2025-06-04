@@ -22,6 +22,8 @@ jobs:
 
       # - name: List all S3 buckets
       #   run: aws s3 ls
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Configure AWS Credentials 1
         id: creds
