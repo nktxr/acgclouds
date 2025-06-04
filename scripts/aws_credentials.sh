@@ -3,7 +3,7 @@
 # Create the .aws directory - won't fail if it already exists
 mkdir -p .aws
 
-# Create the AWS credentials file with default profile from GHA secrets
+# Create the AWS credentials file
 cat > .aws/credentials <<EOL
 [default]
 aws_access_key_id=${AWS_ACCESS_KEY_ID}
