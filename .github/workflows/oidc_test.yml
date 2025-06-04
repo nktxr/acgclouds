@@ -15,7 +15,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Configure AWS Credentials 1
+      - name: Configure AWS Credentials
         id: creds
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -23,10 +23,6 @@ jobs:
           role-to-assume: arn:aws:iam::905418016289:role/cfst-1449-314040f74818fc5af46c82a91bc9f0-LambdaRole-39s5vE2uQAnZ
           output-credentials: true
 
-      - name: get caller identity 1
-        run: |
-          aws sts get-caller-identity
-      
       - name: AWS Creds
         run: |
           ./scripts/aws_credentials.sh 
