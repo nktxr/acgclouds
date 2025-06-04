@@ -15,5 +15,5 @@ services:
     image: amazon/aws-cli:latest
     working_dir: /opt/app/
     volumes:
-      - ./.aws:/root/.aws
+      - .aws/:/root/.aws
       - .:/opt/app:rw
