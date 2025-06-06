@@ -15,12 +15,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Configure AWS Credentials
+      - name: Configure oidc auth
+        id: oidc_auth
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::992382449304:role/githubactions-oidc-deploy-role
+
+      - name: Assume other infra role
         id: creds
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: us-east-1
-          role-to-assume: arn:aws:iam::905418016289:role/cfst-1449-314040f74818fc5af46c82a91bc9f0-LambdaRole-39s5vE2uQAnZ
+          role-to-assume: arn:aws:iam::992382449304:role/cfst-1449-541fd77cce761f8966998d2e7bb529-LambdaRole-znPfLGKhRzTG
+          role-session-name: CICD
+          role-chaining: true
           output-credentials: true
 
       - name: AWS Creds
