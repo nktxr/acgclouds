@@ -30,6 +30,7 @@ jobs:
           role-to-assume: arn:aws:iam::992382449304:role/cfst-1449-541fd77cce761f8966998d2e7bb529-LambdaRole-znPfLGKhRzTG
           role-session-name: CICD
           role-chaining: true
+          role-skip-session-tagging: true
           output-credentials: true
 
       - name: AWS Creds
