@@ -21,12 +21,12 @@ ACCESS_KEY=$(echo "$CREDS" | awk '{print $1}')
 SECRET_KEY=$(echo "$CREDS" | awk '{print $2}')
 SESSION_TOKEN=$(echo "$CREDS" | awk '{print $3}')
 
-mkdir -p ~/.aws
-cat > ~/.aws/credentials <<EOF
+mkdir -p .aws
+cat > .aws/credentials <<EOF
 [default]
 aws_access_key_id = $ACCESS_KEY
 aws_secret_access_key = $SECRET_KEY
 aws_session_token = $SESSION_TOKEN
 EOF
 
-echo "AWS credentials written to ~/.aws/credentials"
+echo "AWS credentials written to .aws/credentials"
