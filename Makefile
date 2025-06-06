@@ -1,9 +1,14 @@
 DOCKER_COMPOSE_PULL := $(shell docker compose pull || true 2 > /dev/null > /dev/null)
-DOCKER_COMPOSE := docker compose run --user="$(shell id -u)"
+DOCKER_COMPOSE := docker compose run 
 
+AWS_DOCKER := $(DOCKER_COMPOSE) aws
 TF := $(DOCKER_COMPOSE) terraform
 TF_ARTIFACT := /opt/app/terraform.plan
 
+
+.PHONY: test
+test:  
+	$(AWS_DOCKER) s3 ls
 
 .PHONY: lint
 lint:  _clean
