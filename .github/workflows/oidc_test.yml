@@ -22,24 +22,17 @@ jobs:
           aws-region: us-east-1
           role-to-assume: arn:aws:iam::992382449304:role/githubactions-oidc-deploy-role
 
-      - name: Assume other infra role
-        id: creds
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-region: us-east-1
-          role-to-assume: arn:aws:iam::992382449304:role/cfst-1449-541fd77cce761f8966998d2e7bb529-LambdaRole-znPfLGKhRzTG
-          role-session-name: CICD
-          role-chaining: true
-          role-skip-session-tagging: true
-          output-credentials: true
-
-      - name: AWS Creds
+      - name: Assume Infra Role and populate credentials
         run: |
-          ./scripts/aws_credentials.sh 
-        env: 
-          AWS_ACCESS_KEY_ID: ${{ steps.creds.outputs.aws-access-key-id }}
-          AWS_SECRET_ACCESS_KEY: ${{ steps.creds.outputs.aws-secret-access-key }}
-          AWS_SESSION_TOKEN: ${{ steps.creds.outputs.aws-session-token }}
+          ./scripts/aws_credentials.sh arn:aws:iam::992382449304:role/cfst-1449-541fd77cce761f8966998d2e7bb529-LambdaRole-znPfLGKhRzTG githubactions-session us-east-1
+
+      # - name: AWS Creds
+      #   run: |
+      #     ./scripts/aws_credentials.sh 
+      #   env: 
+      #     AWS_ACCESS_KEY_ID: ${{ steps.creds.outputs.aws-access-key-id }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ steps.creds.outputs.aws-secret-access-key }}
+      #     AWS_SESSION_TOKEN: ${{ steps.creds.outputs.aws-session-token }}
           
       - name: 3m s3 test
         run: make test
