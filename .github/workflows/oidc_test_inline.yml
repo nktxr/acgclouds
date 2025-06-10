@@ -22,28 +22,16 @@ jobs:
         id: assume-role
         run: |
           set -euxo pipefail # Enable verbose debugging
-          # OIDC_TOKEN=$(curl -s -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com")
+          # OIDC_TOKEN=$(curl -s -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com" )
 
           echo "Attempting to fetch OIDC token..."
           # Store curl output in a temporary file to inspect it
-          curl_output=$(curl -s -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com")
-
-          # Check if curl_output is empty or contains an error message
-          if [ -z "$curl_output" ]; then
-            echo "Error: OIDC_TOKEN is empty after curl command. Check curl URL and GitHub token."
-            exit 1
-          fi
+          OIDC_TOKEN=$(curl -s -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com" | jq -r '.value')
 
           # Assign to OIDC_TOKEN
-          OIDC_TOKEN="$curl_output | jq -r '.value'"
-
-          echo "OIDC_TOKEN length: ${#OIDC_TOKEN}"
-          echo "OIDC_TOKEN (first 200 chars): ${OIDC_TOKEN:0:200}" # Print beginning of token for inspection
           # If you're comfortable, you can print the full token for very specific debugging,
           # but be aware this is sensitive. For production, never print the full token.
           echo "OIDC_TOKEN (full): $OIDC_TOKEN"
-
-          # ... rest of your aws sts assume-role-with-web-identity command ...
 
           # Assume the IAM role using the OIDC token
           ASSUMED_ROLE_CREDENTIALS=$(aws sts assume-role-with-web-identity \
