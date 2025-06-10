@@ -24,7 +24,7 @@ jobs:
           # Fetch the OIDC ID token
           # This token is a JWT that GitHub provides and is signed by GitHub's OIDC provider.
           OIDC_TOKEN=$(curl -s -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$secrets.ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com")
-
+          env
           # Assume the IAM role using the OIDC token
           # Replace 'arn:aws:iam::381492001354:role/gha_role' with your actual IAM Role ARN
           ASSUMED_ROLE_CREDENTIALS=$(aws sts assume-role-with-web-identity \
