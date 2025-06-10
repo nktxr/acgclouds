@@ -35,7 +35,7 @@ jobs:
           fi
 
           # Assign to OIDC_TOKEN
-          OIDC_TOKEN="$curl_output"
+          OIDC_TOKEN="$curl_output | jq -r '.value'"
 
           echo "OIDC_TOKEN length: ${#OIDC_TOKEN}"
           echo "OIDC_TOKEN (first 200 chars): ${OIDC_TOKEN:0:200}" # Print beginning of token for inspection
