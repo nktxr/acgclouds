@@ -1,0 +1,52 @@
+name: AWS OIDC Auth with AWS CLI
+
+on: # yamllint disable-line rule:truthy
+  push:
+
+permissions:
+  id-token: write # Required to fetch the OIDC ID token
+  contents: read  # Required to checkout the repository
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install AWS CLI
+        run: |
+          aws --version 
+
+      - name: Get OIDC token and assume role
+        id: assume-role
+        run: |
+          echo "Attempting to fetch OIDC token..."
+          OIDC_TOKEN=$(curl -s -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com" | jq -r '.value')
+
+          # Assume the IAM role using the OIDC token
+          ASSUMED_ROLE_CREDENTIALS=$(aws sts assume-role-with-web-identity \
+            --role-arn "arn:aws:iam::381492001354:role/gha_role" \
+            --role-session-name "GitHubActionsSession" \
+            --web-identity-token "${OIDC_TOKEN}" \
+            --duration-seconds 3600 \
+            --output json 2>&1)
+
+          # Check if the command was successful before trying to parse JSON
+          if echo "$ASSUMED_ROLE_CREDENTIALS" | jq -e .Credentials > /dev/null; then
+            echo "Role assumption successful!"
+            # Extract credentials and set them as environment variables for subsequent steps
+            echo "AWS_ACCESS_KEY_ID=$(echo "$ASSUMED_ROLE_CREDENTIALS" | jq -r '.Credentials.AccessKeyId')" >> $GITHUB_ENV
+            echo "AWS_SECRET_ACCESS_KEY=$(echo "$ASSUMED_ROLE_CREDENTIALS" | jq -r '.Credentials.SecretAccessKey')" >> $GITHUB_ENV
+            echo "AWS_SESSION_TOKEN=$(echo "$ASSUMED_ROLE_CREDENTIALS" | jq -r '.Credentials.SessionToken')" >> $GITHUB_ENV
+            echo "AWS_REGION=us-east-1" >> $GITHUB_ENV # Ensure this matches your target region
+          else
+            echo "Role assumption failed! AWS CLI output:"
+            echo "$ASSUMED_ROLE_CREDENTIALS" # Print the full error output
+            exit 1 # Fail the step explicitly
+          fi
+
+      - name: Verify AWS CLI access
+        run: |
+          aws sts get-caller-identity
+          aws s3 ls # Example AWS CLI command
