@@ -21,17 +21,8 @@ jobs:
       - name: Get OIDC token and assume role
         id: assume-role
         run: |
-          set -euxo pipefail # Enable verbose debugging
-          # OIDC_TOKEN=$(curl -s -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com" )
-
           echo "Attempting to fetch OIDC token..."
-          # Store curl output in a temporary file to inspect it
           OIDC_TOKEN=$(curl -s -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com" | jq -r '.value')
-
-          # Assign to OIDC_TOKEN
-          # If you're comfortable, you can print the full token for very specific debugging,
-          # but be aware this is sensitive. For production, never print the full token.
-          echo "OIDC_TOKEN (full): $OIDC_TOKEN"
 
           # Assume the IAM role using the OIDC token
           ASSUMED_ROLE_CREDENTIALS=$(aws sts assume-role-with-web-identity \
