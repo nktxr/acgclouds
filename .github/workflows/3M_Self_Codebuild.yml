@@ -18,7 +18,7 @@ jobs:
   Configure:
     name: configure
     runs-on: 
-      - acloudguru-codebuild-tf-${{ github.run_id }}-${{ github.run_attempt }}
+      - codebuild-acloudguru-codebuild-tf-${{ github.run_id }}-${{ github.run_attempt }}
 
     steps:
       - uses: actions/checkout@v4
@@ -36,7 +36,7 @@ jobs:
   Terraform_Plan:
     name: Terraform Plan
     runs-on: 
-      - acloudguru-codebuild-tf-${{ github.run_id }}-${{ github.run_attempt }}
+      - codebuild-acloudguru-codebuild-tf-${{ github.run_id }}-${{ github.run_attempt }}
     needs: Configure
 
     steps:
@@ -65,7 +65,7 @@ jobs:
   Terraform_Apply:
     name: Terraform Apply
     runs-on: 
-      - acloudguru-codebuild-tf-${{ github.run_id }}-${{ github.run_attempt }}
+      - codebuild-acloudguru-codebuild-tf-${{ github.run_id }}-${{ github.run_attempt }}
     needs: Terraform_Plan
     environment: Test_Env
 
@@ -88,3 +88,4 @@ jobs:
 
       - name: TF Apply
         run: make apply
+
