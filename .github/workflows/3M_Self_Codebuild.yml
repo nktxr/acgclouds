@@ -18,7 +18,7 @@ jobs:
   Configure:
     name: configure
     runs-on: 
-      - codebuild-testcideb-${{ github.run_id }}-${{ github.run_attempt }}
+      - codebuild-my-test-to-import-${{ github.run_id }}-${{ github.run_attempt }}
 
     steps:
       - uses: actions/checkout@v4
