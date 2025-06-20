@@ -18,7 +18,7 @@ jobs:
   Configure:
     name: configure
     runs-on: 
-      - codebuild-my-test-to-import-${{ github.run_id }}-${{ github.run_attempt }}
+      - acloudguru-codebuild-tf-${{ github.run_id }}-${{ github.run_attempt }}
 
     steps:
       - uses: actions/checkout@v4
@@ -36,7 +36,7 @@ jobs:
   Terraform_Plan:
     name: Terraform Plan
     runs-on: 
-      - codebuild-testcideb-${{ github.run_id }}-${{ github.run_attempt }}
+      - acloudguru-codebuild-tf-${{ github.run_id }}-${{ github.run_attempt }}
     needs: Configure
 
     steps:
@@ -65,7 +65,7 @@ jobs:
   Terraform_Apply:
     name: Terraform Apply
     runs-on: 
-      - codebuild-testcideb-${{ github.run_id }}-${{ github.run_attempt }}
+      - acloudguru-codebuild-tf-${{ github.run_id }}-${{ github.run_attempt }}
     needs: Terraform_Plan
     environment: Test_Env
 
