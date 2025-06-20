@@ -19,7 +19,6 @@ jobs:
     name: configure
     runs-on: 
       - codebuild-acloudguru-codebuild-tf-${{ github.run_id }}-${{ github.run_attempt }}
-
     steps:
       - uses: actions/checkout@v4
 
